@@ -1,0 +1,7 @@
+D:\코드들\MegaTicTacToe\MegaTicTacToe\bin\Debug\MegaTicTacToe.exe.config
+D:\코드들\MegaTicTacToe\MegaTicTacToe\bin\Debug\MegaTicTacToe.exe
+D:\코드들\MegaTicTacToe\MegaTicTacToe\bin\Debug\MegaTicTacToe.pdb
+D:\코드들\MegaTicTacToe\MegaTicTacToe\obj\Debug\MegaTicTacToe.csproj.AssemblyReference.cache
+D:\코드들\MegaTicTacToe\MegaTicTacToe\obj\Debug\MegaTicTacToe.csproj.CoreCompileInputs.cache
+D:\코드들\MegaTicTacToe\MegaTicTacToe\obj\Debug\MegaTicTacToe.exe
+D:\코드들\MegaTicTacToe\MegaTicTacToe\obj\Debug\MegaTicTacToe.pdb
