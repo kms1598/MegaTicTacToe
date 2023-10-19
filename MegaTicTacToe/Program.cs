@@ -10,6 +10,7 @@ namespace MegaTicTacToe
     {
         char[,] small = new char[3, 3];
         public char win;
+        int num = 0;
 
         public char[,] Small
         {
@@ -32,6 +33,18 @@ namespace MegaTicTacToe
             get
             {
                 return win;
+            }
+        }
+
+        public int Num
+        {
+            set
+            {
+                num = value;
+            }
+            get
+            {
+                return num;
             }
         }
 
@@ -62,10 +75,15 @@ namespace MegaTicTacToe
             if (small[1, 1] != '-' && small[0, 2] == small[1, 1] && small[1, 1] == small[2, 0])
                 win = small[1, 1];
             if (win != '-')
-                isWin();
+                isWin(win);
+            if (Num == 9 && win == '-')
+            {
+                win = '*';
+                isWin('*');
+            }
         }
 
-        void isWin() //승리 확정
+        void isWin(char win) //승리 확정
         {
             for(int i = 0; i < 3; i++)
             {
@@ -180,6 +198,8 @@ namespace MegaTicTacToe
 
         public void GetInput() //입력 받기
         {
+            int letter;
+            int num;
             while (true)
             {
                 if (turn % 2 == 1)
@@ -200,12 +220,16 @@ namespace MegaTicTacToe
                     Console.WriteLine("길이 오류\r\n");
                     continue;
                 }
-                if (input[0] - 'A' < 0 || input[0] - 'I' > 0)
+
+                letter = input[0] < 'a' ? input[0] - 'A' : input[0] - 'a';
+                num = input[1] - '1';
+
+                if (letter < 0 || letter > 8)
                 {
                     Console.WriteLine("문자 오류\r\n");
                     continue;
                 }
-                if (input[1] - '1' < 0 || input[1] - '9' > 0)
+                if (num < 0 || num > 8)
                 {
                     Console.WriteLine("숫자 오류\r\n");
                     continue;
@@ -213,14 +237,14 @@ namespace MegaTicTacToe
 
                 if (!isFree)
                 {
-                    if ((input[0] - 'A') / 3 != targetRow || (input[1] - '1') / 3 != targetCol)
+                    if (letter / 3 != targetRow || (input[1] - '1') / 3 != targetCol)
                     {
                         Console.WriteLine("범위 오류\r\n");
                         continue;
                     }
                 }
 
-                if(big[(input[0] - 'A') / 3, (input[1] - '1') / 3].Small[(input[0] - 'A') % 3, (input[1] - '1') % 3] != '-')
+                if(big[letter / 3, (input[1] - '1') / 3].Small[letter % 3, num % 3] != '-')
                 {
                     Console.WriteLine("이미 선택된 칸입니다.\r\n");
                     continue;
@@ -228,16 +252,17 @@ namespace MegaTicTacToe
 
                 isFree = false;
 
-                targetRow = (input[0] - 'A') % 3; //다음 위치 결정
-                targetCol = (input[1] - '1') % 3;
+                targetRow = letter % 3; //다음 위치 결정
+                targetCol = num % 3;
 
                 if(turn % 2 == 1) //현재 턴 플레이어 판별
-                    big[(input[0] - 'A') / 3, (input[1] - '1') / 3].Small[(input[0] - 'A') % 3, (input[1] - '1') % 3] = 'O';
+                    big[letter / 3, num / 3].Small[letter % 3, num % 3] = 'O';
                 else
-                    big[(input[0] - 'A') / 3, (input[1] - '1') / 3].Small[(input[0] - 'A') % 3, (input[1] - '1') % 3] = 'X';
+                    big[letter / 3, num / 3].Small[letter % 3, num % 3] = 'X';
 
+                big[letter / 3, num / 3].Num++;
 
-                big[(input[0] - 'A') / 3, (input[1] - '1') / 3].JudgeWin(ref big[(input[0] - 'A') / 3, (input[1] - '1') / 3].win); //놓은 작은 보드의 승패 파악
+                big[letter / 3, num / 3].JudgeWin(ref big[letter / 3, num / 3].win); //놓은 작은 보드의 승패 파악
 
                 if (big[targetRow, targetCol].Win != '-')
                     isFree = true; //놓은 위치가 승리 판정되면 다음 차례는 아무 칸이나 가능
