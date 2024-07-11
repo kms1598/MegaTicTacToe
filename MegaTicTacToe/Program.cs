@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace MegaTicTacToe
     {
         char[,] small = new char[3, 3];
         public char win;
+        public int numO = 0, numX = 0;
         int num = 0;
 
         public char[,] Small
@@ -61,26 +63,45 @@ namespace MegaTicTacToe
             win = '-';
         }
 
-        public void JudgeWin(ref char win) //작은 보드의 승리 판단
+        public bool JudgeWin() //작은 보드의 승리 판단, bool로 승리 확정 여부 반환
         {
             for (int i = 0; i < 3; i++)
             {
                 if (small[i, 1] != '-' && small[i, 0] == small[i, 1] && small[i, 1] == small[i, 2])
+                {
                     win = small[i, 1];
+                    break;
+                }
                 if (small[1, i] != '-' && small[0, i] == small[1, i] && small[1, i] == small[2, i])
+                {
                     win = small[1, i];
+                    break;
+                }
             }
+
             if (small[1, 1] != '-' && small[0, 0] == small[1, 1] && small[1, 1] == small[2, 2])
-                win = small[1, 1];
-            if (small[1, 1] != '-' && small[0, 2] == small[1, 1] && small[1, 1] == small[2, 0])
-                win = small[1, 1];
-            if (win != '-')
-                isWin(win);
-            if (Num == 9 && win == '-')
             {
-                win = '*';
-                isWin('*');
+                win = small[1, 1];
             }
+
+            if (small[1, 1] != '-' && small[0, 2] == small[1, 1] && small[1, 1] == small[2, 0])
+            {
+                win = small[1, 1];
+            }
+
+            if (win != '-')
+            {
+                isWin(win);
+                return true;
+            }
+
+            if (Num == 9)
+            {
+                isWin((numO > numX) ? 'O' : 'X');
+                return true;
+            }
+
+            return false;
         }
 
         void isWin(char win) //승리 확정
@@ -193,7 +214,6 @@ namespace MegaTicTacToe
                 }
                 Console.Write("\r\n");
             }
-
         }
 
         public void GetInput() //입력 받기
@@ -256,13 +276,18 @@ namespace MegaTicTacToe
                 targetCol = num % 3;
 
                 if(turn % 2 == 1) //현재 턴 플레이어 판별
+                {
                     big[letter / 3, num / 3].Small[letter % 3, num % 3] = 'O';
+                    big[letter / 3, num / 3].numO++;
+                }
                 else
+                {
                     big[letter / 3, num / 3].Small[letter % 3, num % 3] = 'X';
+                    big[letter / 3, num / 3].numX++;
+                }
 
                 big[letter / 3, num / 3].Num++;
-
-                big[letter / 3, num / 3].JudgeWin(ref big[letter / 3, num / 3].win); //놓은 작은 보드의 승패 파악
+                big[letter / 3, num / 3].JudgeWin();
 
                 if (big[targetRow, targetCol].Win != '-')
                     isFree = true; //놓은 위치가 승리 판정되면 다음 차례는 아무 칸이나 가능
@@ -275,23 +300,23 @@ namespace MegaTicTacToe
         {
             for (int i = 0; i < 3; i++)
             {
-                if (big[i, 0].Win == big[i, 1].Win && big[i, 1].Win == big[i, 2].Win && big[i, 1].Win != '-')
+                if (big[i, 1].Win != '-' && big[i, 0].Win == big[i, 1].Win && big[i, 1].Win == big[i, 2].Win)
                 {
                     win++;
                     return big[i, 1].Win;
                 }
-                if (big[0, i].Win == big[1, i].Win && big[1, i].Win == big[2, i].Win && big[1, i].Win != '-')
+                if (big[1, i].Win != '-' && big[0, i].Win == big[1, i].Win && big[1, i].Win == big[2, i].Win)
                 {
                     win++;
                     return big[1, i].Win;
                 }
             }
-            if (big[0, 0].Win == big[1, 1].Win && big[1, 1].Win == big[2, 2].Win && big[1, 1].Win != '-')
+            if (big[1, 1].Win != '-' && big[0, 0].Win == big[1, 1].Win && big[1, 1].Win == big[2, 2].Win)
             {
                 win++;
                 return big[1, 1].Win;
             }
-            if (big[0, 2].Win == big[1, 1].Win && big[1, 1].Win == big[2, 0].Win && big[1, 1].Win != '-')
+            if (big[1, 1].Win != '-' && big[0, 2].Win == big[1, 1].Win && big[1, 1].Win == big[2, 0].Win)
             {
                 win++;
                 return big[1, 1].Win;
